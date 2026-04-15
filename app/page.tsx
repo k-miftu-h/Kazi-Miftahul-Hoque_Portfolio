@@ -165,7 +165,7 @@ export default function Home() {
         <div className="works-grid">
           {/* Project Item 1 */}
           <AnimatedSection delay={0.1}>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', cursor: 'pointer', group: 'true' }}>
+            <div className="group" style={{ display: 'flex', flexDirection: 'column', gap: '1rem', cursor: 'pointer' }}>
               <div style={{ position: 'relative', width: '100%', aspectRatio: '16/10', borderRadius: '16px', overflow: 'hidden', background: '#111', border: '1px solid var(--border-color)', transition: 'all 0.4s ease' }}
                    onMouseEnter={(e) => { e.currentTarget.style.transform = 'scale(1.02)'; e.currentTarget.style.boxShadow = '0 15px 30px rgba(0,0,0,0.4)'; }}
                    onMouseLeave={(e) => { e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.boxShadow = 'none'; }}>
