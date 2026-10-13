@@ -115,7 +115,7 @@ export default function WorkScroll({ folder, prefix }: { folder?: string, prefix
 
   return (
     <>
-      <div style={{ position: 'relative', width: '100%', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+      <div style={{ position: 'relative', width: '100%', maxWidth: '100%', display: 'flex', flexDirection: 'column', gap: '0.75rem', overflow: 'hidden' }}>
         
         {/* Scrollable Container */}
         <div 
@@ -124,12 +124,11 @@ export default function WorkScroll({ folder, prefix }: { folder?: string, prefix
           style={{ 
             display: 'flex', 
             overflowX: 'auto', 
-            gap: '16px', 
             scrollBehavior: 'smooth',
             width: '100%',
-            alignItems: 'flex-start',
-            scrollSnapType: 'x mandatory', // Enforce snapping perfectly to the middle
-            // Hide standard scrollbar inline via modern css
+            maxWidth: '100%',
+            alignItems: 'stretch',
+            scrollSnapType: 'x mandatory',
             scrollbarWidth: 'none',   // Firefox
             msOverflowStyle: 'none',  // IE and Edge
             WebkitOverflowScrolling: 'touch', // iOS smooth scrolling
@@ -147,66 +146,96 @@ export default function WorkScroll({ folder, prefix }: { folder?: string, prefix
               key={img.public_id} 
               style={{ 
                 width: '100%',
-                flex: '0 0 100%', // Enforces exact 100% slot filling
-                aspectRatio: '16/10',
-                borderRadius: '16px', 
-                overflow: 'hidden',
-                position: 'relative',
-                border: '1px solid var(--border-color)',
-                background: 'rgba(15, 47, 63, 0.4)', // Darker background to gracefully frame non-16/10 images
-                scrollSnapAlign: 'center', // Snaps exactly to center of scroll view
-                cursor: 'pointer', // Indicates clickability
+                minWidth: '100%',
+                flex: '0 0 100%',
+                scrollSnapAlign: 'start',
+                boxSizing: 'border-box'
               }}
-              onClick={() => setSelectedImage(img.secure_url)}
             >
-              <img
-                src={img.secure_url}
-                alt="Project asset"
-                loading="lazy"
+              <div
                 style={{ 
-                  width: '100%', 
-                  height: '100%', 
-                  objectFit: 'contain', // Replaced 'cover' to prevent ANY cropping
-                  padding: '12px' 
+                  width: '100%',
+                  aspectRatio: '16/10',
+                  borderRadius: '16px', 
+                  overflow: 'hidden',
+                  position: 'relative',
+                  border: '1px solid var(--border-color)',
+                  background: 'rgba(15, 47, 63, 0.4)',
+                  cursor: 'pointer',
+                  boxSizing: 'border-box'
                 }}
-              />
+                onClick={() => setSelectedImage(img.secure_url)}
+              >
+                <img
+                  src={img.secure_url}
+                  alt="Project asset"
+                  loading="lazy"
+                  style={{ 
+                    width: '100%', 
+                    height: '100%', 
+                    objectFit: 'contain',
+                    padding: '12px' 
+                  }}
+                />
+              </div>
             </div>
           ))}
         </div>
 
         {/* Navigation & Indicator Bar */}
         {images.length > 1 && (
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 0.5rem', marginTop: '0.25rem' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 0.25rem', marginTop: '0.25rem', width: '100%', boxSizing: 'border-box' }}>
             
-            {/* Dots Counter */}
-            <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
-              {images.map((_, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => scrollToIndex(idx)}
-                  aria-label={`Go to image ${idx + 1}`}
-                  style={{
-                    width: activeIndex === idx ? '20px' : '6px',
-                    height: '6px',
-                    borderRadius: '3px',
-                    background: activeIndex === idx ? 'var(--accent-primary)' : 'rgba(255, 255, 255, 0.2)',
-                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                    border: 'none',
-                    cursor: 'pointer',
-                    padding: 0
-                  }}
-                  onMouseEnter={(e) => { if(activeIndex !== idx) e.currentTarget.style.background = 'rgba(255, 255, 255, 0.5)'; }}
-                  onMouseLeave={(e) => { if(activeIndex !== idx) e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)'; }}
-                />
-              ))}
-            </div>
+            {/* Dots Counter (for <= 8 images) or Numeric Badge (for > 8 images) */}
+            {images.length <= 8 ? (
+              <div style={{ display: 'flex', gap: '6px', alignItems: 'center', flexWrap: 'nowrap' }}>
+                {images.map((_, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => scrollToIndex(idx)}
+                    aria-label={`Go to image ${idx + 1}`}
+                    style={{
+                      width: activeIndex === idx ? '20px' : '6px',
+                      height: '6px',
+                      borderRadius: '3px',
+                      background: activeIndex === idx ? 'var(--accent-primary)' : 'rgba(255, 255, 255, 0.2)',
+                      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                      border: 'none',
+                      cursor: 'pointer',
+                      padding: 0
+                    }}
+                    onMouseEnter={(e) => { if(activeIndex !== idx) e.currentTarget.style.background = 'rgba(255, 255, 255, 0.5)'; }}
+                    onMouseLeave={(e) => { if(activeIndex !== idx) e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)'; }}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div style={{ 
+                display: 'inline-flex', 
+                alignItems: 'center', 
+                gap: '6px', 
+                padding: '3px 10px', 
+                background: 'rgba(255,255,255,0.04)', 
+                borderRadius: '20px', 
+                border: '1px solid var(--border-color)',
+                fontSize: '0.85rem',
+                color: 'var(--text-muted)',
+                fontWeight: 500
+              }}>
+                <span style={{ color: 'var(--accent-primary)', fontWeight: 700 }}>{activeIndex + 1}</span>
+                <span>/</span>
+                <span>{images.length}</span>
+              </div>
+            )}
 
             {/* Navigation Controls */}
-            <div style={{ display: 'flex', gap: '0.5rem' }}>
+            <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
               <button 
                 onClick={() => scrollFiles('left')}
+                aria-label="Previous image"
                 style={{
-                  padding: '8px',
+                  width: '32px',
+                  height: '32px',
                   borderRadius: '50%',
                   background: 'rgba(255,255,255,0.05)',
                   border: '1px solid var(--border-color)',
@@ -224,8 +253,10 @@ export default function WorkScroll({ folder, prefix }: { folder?: string, prefix
               </button>
               <button 
                 onClick={() => scrollFiles('right')}
+                aria-label="Next image"
                 style={{
-                  padding: '8px',
+                  width: '32px',
+                  height: '32px',
                   borderRadius: '50%',
                   background: 'rgba(255,255,255,0.05)',
                   border: '1px solid var(--border-color)',
@@ -254,13 +285,14 @@ export default function WorkScroll({ folder, prefix }: { folder?: string, prefix
             position: 'fixed',
             inset: 0,
             zIndex: 9999,
-            background: 'rgba(0, 0, 0, 0.85)',
+            background: 'rgba(0, 0, 0, 0.9)',
             backdropFilter: 'blur(8px)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            padding: '2rem',
-            animation: 'fadeIn 0.2s ease-out'
+            padding: 'clamp(1rem, 3vw, 2rem)',
+            animation: 'fadeIn 0.2s ease-out',
+            boxSizing: 'border-box'
           }}
           onClick={() => setSelectedImage(null)}
         >
@@ -270,35 +302,39 @@ export default function WorkScroll({ folder, prefix }: { folder?: string, prefix
           <button 
             style={{ 
               position: 'absolute', 
-              top: '2rem', 
-              right: '2rem', 
-              background: 'rgba(255,255,255,0.1)', 
+              top: 'clamp(0.75rem, 2vw, 1.5rem)', 
+              right: 'clamp(0.75rem, 2vw, 1.5rem)', 
+              background: 'rgba(255,255,255,0.15)', 
               border: 'none', 
               borderRadius: '50%', 
-              padding: '0.75rem', 
+              padding: '0.65rem', 
               color: 'white', 
               cursor: 'pointer', 
               zIndex: 10000,
-              transition: 'background 0.2s'
+              transition: 'background 0.2s',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
             }}
-            onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.2)'}
-            onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
+            onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.25)'}
+            onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.15)'}
             onClick={() => setSelectedImage(null)}
+            aria-label="Close image preview"
           >
-            <X size={24} />
+            <X size={22} />
           </button>
           
           <img 
             src={selectedImage} 
             alt="Expanded view" 
             style={{ 
-              maxWidth: '100%', 
-              maxHeight: '100%', 
+              maxWidth: '92vw', 
+              maxHeight: '88vh', 
               objectFit: 'contain', 
               borderRadius: '8px', 
-              boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)' 
+              boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.7)' 
             }} 
-            onClick={(e) => e.stopPropagation()} // Prevent clicking image from closing modal
+            onClick={(e) => e.stopPropagation()} 
           />
         </div>
       )}

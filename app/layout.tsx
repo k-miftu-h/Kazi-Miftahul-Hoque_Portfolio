@@ -27,8 +27,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${inter.variable} ${poppins.variable}`} style={{ scrollBehavior: 'smooth' }}>
-      <body className="flex flex-col min-h-screen">
+    <html 
+      lang="en" 
+      className={`${inter.variable} ${poppins.variable}`} 
+      style={{ scrollBehavior: 'smooth' }}
+      data-scroll-behavior="smooth"
+      suppressHydrationWarning
+    >
+      <body className="flex flex-col min-h-screen" suppressHydrationWarning>
         <Navbar />
         <main style={{ flexGrow: 1 }}>{children}</main>
         <Footer />

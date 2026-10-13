@@ -65,14 +65,15 @@ export default function Resume() {
         </AnimatedSection>
 
         {/* 1. ABOUT SPLIT SECTION */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '4rem', alignItems: 'stretch' }}>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-stretch">
           
           {/* Left Column: Image */}
-          <AnimatedSection delay={0.1} style={{ position: 'relative', width: '100%', minHeight: '400px', borderRadius: '24px', overflow: 'hidden', border: '1px solid var(--border-color)', boxShadow: '0 20px 40px rgba(0,0,0,0.3)' }}>
+          <AnimatedSection delay={0.1} style={{ position: 'relative', width: '100%', minHeight: '380px', borderRadius: '24px', overflow: 'hidden', border: '1px solid var(--border-color)', boxShadow: '0 20px 40px rgba(0,0,0,0.3)' }}>
             <Image 
               src="/Images/miftu.jpg" 
               alt="Kazi Miftahul Hoque"
               fill
+              sizes="(max-width: 768px) 100vw, 50vw"
               style={{ objectFit: 'cover' }}
               priority
             />
@@ -89,13 +90,13 @@ export default function Resume() {
             </p>
 
             {/* 2-Column Info Grid */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem 2rem', marginBottom: '2.5rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 200px), 1fr))', gap: '1rem 2rem', marginBottom: '2.5rem' }}>
               {INFO_ITEMS.map((item, idx) => (
                 <div key={idx} style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-                  <ChevronRight size={16} className="text-accent" />
+                  <ChevronRight size={16} className="text-accent flex-shrink-0" />
                   <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{item.label}:</span>
                   {item.link ? (
-                    <a href={item.link} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--text-muted)', textDecoration: 'none' }} className="hover:text-accent">
+                    <a href={item.link} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--text-muted)', textDecoration: 'none', wordBreak: 'break-all' }} className="hover:text-accent">
                       {item.value}
                     </a>
                   ) : (
@@ -118,40 +119,43 @@ export default function Resume() {
         </div>
 
         {/* 2. STATISTICS GRID */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '2rem', marginTop: '2rem' }}>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 mt-8">
           {STATS.map((stat, idx) => (
             <AnimatedSection key={idx} delay={0.2 + (idx * 0.1)}>
-              <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '2rem 1.5rem', textAlign: 'center' }}>
-                <div style={{ padding: '1rem', background: 'rgba(56, 189, 248, 0.1)', borderRadius: '50%', color: 'var(--accent-primary)', marginBottom: '1rem' }}>
+              <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '1.5rem 1rem', textAlign: 'center' }}>
+                <div style={{ padding: '0.85rem', background: 'rgba(56, 189, 248, 0.1)', borderRadius: '50%', color: 'var(--accent-primary)', marginBottom: '0.75rem' }}>
                   {stat.icon}
                 </div>
-                <h3 style={{ fontSize: '2.5rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: '0.5rem', lineHeight: 1 }}>{stat.value}</h3>
-                <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', fontWeight: 500 }}>{stat.label}</p>
+                <h3 style={{ fontSize: 'clamp(1.8rem, 4vw, 2.5rem)', fontWeight: 800, color: 'var(--text-primary)', marginBottom: '0.35rem', lineHeight: 1 }}>{stat.value}</h3>
+                <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', fontWeight: 500 }}>{stat.label}</p>
               </div>
             </AnimatedSection>
           ))}
         </div>
 
         {/* 3. SKILLS SECTION */}
-        <AnimatedSection style={{ marginTop: '4rem' }}>
+        <AnimatedSection style={{ marginTop: '4rem', width: '100%' }}>
           <h2 style={{ color: 'var(--text-muted)', fontSize: '1rem', fontWeight: 600, letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: '2.5rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
             SKILLS <div style={{ height: '2px', width: '40px', background: 'var(--accent-primary)' }}></div>
           </h2>
           
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '3rem' }}>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 w-full">
             {SKILL_CATEGORIES.map((category, idx) => (
-              <div key={idx} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+              <div key={idx} style={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '100%', maxWidth: '100%' }}>
                 <h3 style={{ fontSize: '1.2rem', color: 'var(--text-primary)', fontWeight: 600 }}>{category.title}</h3>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem' }}>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.6rem 0.75rem', width: '100%' }}>
                   {category.skills.map((skill, sIdx) => (
                     <span key={sIdx} style={{
-                      padding: '0.5rem 1.25rem',
+                      padding: '0.45rem 1rem',
                       background: 'rgba(255, 255, 255, 0.03)',
                       border: '1px solid var(--border-color)',
                       borderRadius: '8px',
                       color: 'var(--text-muted)',
-                      fontSize: '0.95rem',
+                      fontSize: '0.9rem',
                       fontWeight: 500,
+                      maxWidth: '100%',
+                      whiteSpace: 'normal',
+                      wordBreak: 'break-word',
                       transition: 'all 0.3s ease'
                     }}
                     className="hover:border-accent hover:text-primary"
